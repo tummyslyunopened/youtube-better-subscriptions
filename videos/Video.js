@@ -46,6 +46,16 @@ function isMemberOnly(badges) {
     return membersOnly;
 }
 
+function getVideoFuzzyDate(item) {
+    let videoFuzzyDate = item.querySelectorAll(".yt-content-metadata-view-model__metadata-text")[2].innerText
+    if (videoFuzzyDate != null) {
+        return videoFuzzyDate;
+    }
+    else {
+        log("Unable to determine video date")
+    }
+}
+
 function changeMarkWatchedToMarkUnwatched(item) {
     // find Mark as watched button and change it to Unmark as watched
     let metaDataLine = item.querySelector("#" + METADATA_LINE);
@@ -64,6 +74,7 @@ class Video {
         this.videoId = getVideoId(containingDiv);
         this.isStored = watchedVideos['w' + this.videoId];
         this.buttonId = this.isStored ? MARK_UNWATCHED_BTN : MARK_WATCHED_BTN;
+        this.fuzzyDate = containingDiv.querySelectorAll(".yt-content-metadata-view-model__metadata-text")[2].innerText
         this.videoDuration = getVideoDuration(this);
         this.badges = containingDiv.querySelectorAll("ytd-badge-supported-renderer");
         this.membersOnly = isMemberOnly(this.badges);
@@ -81,6 +92,27 @@ class Video {
             log("Video URL is null - ad.");
             this.isShort = true;
         }
+        if (this.fuzzyDate != null) {
+            this.isOlder = false;
+            log(this.fuzzyDate)
+            if (this.fuzzyDate.includes("month") || this.fuzzyDate.includes("year")) {
+                this.isOlder = true;
+            }
+            else if (this.fuzzyDate.includes("weeks") && hideOlderCutoff != "1 Month") {
+                this.isOlder = true;
+            }
+            else if (this.fuzzyDate.includes("day")) {
+                if (hideOlderCutoff == "Today") {
+                    this.isOlder = true;
+                }
+                else if (hideOlderCutoff == "1 Week" && Number(this.fuzzyDate.match(/\d+/)[0]) >= 7) {
+                    this.isOlder = true;
+                }
+            }
+        }
+        else{
+            this.isOlder = null;
+        }
     }
 
     hasButton() {
@@ -95,6 +127,16 @@ class Video {
         hidden.push(this.containingDiv);
         this.containingDiv.style.display = 'none';
         this.containingDiv.classList.add(HIDDEN_CLASS);
+    }
+
+    hideOlder() {
+        older.push(this.containingDiv);
+        // if on chronological page (subscriptions), take up space to prevent layout shift
+        this.containingDiv.style.visibility = 'hidden';
+        this.containingDiv.classList.add(OLDER_CLASS);
+        // otherwise if on home page, hide and allow continuation of home page feed
+        if (getCurrentPage() == PAGES.home) this.containingDiv.style.display = 'none';
+        // TODO: support setting toggle for hide behavior on various other pages, like channel pages
     }
 
     markWatched() {
