@@ -4,10 +4,12 @@ let hideWatched = null;
 let hidePremieres = null;
 let hideShorts = null;
 let hideMembersOnly = null;
+let removePodcastPlaylists = null;
 let intervalId = null;
 let removeRichSections = null;
 let hideOlder = null;
 let hideOlderCutoff = null;
+
 
 function isYouTubeWatched(item) {
     let ytWatchedPercentThreshold = settings["settings.mark.watched.youtube.watched"];
@@ -109,9 +111,6 @@ async function initSubs() {
     if (hideShorts == null) {
         hideShorts = settings["settings.hide.shorts"];
     }
-    if (removeRichSections == null) {
-        removeRichSections = settings["settings.remove.rich.sections"];
-    }
     if (hideMembersOnly == null) {
         hideMembersOnly = settings["settings.hide.members"];
     }
@@ -120,6 +119,12 @@ async function initSubs() {
     }
     if (hideOlderCutoff == null) {
         hideOlderCutoff = settings["settings.hide.older.cutoff"];
+    }
+    if (removePodcastPlaylists == null) {
+        removePodcastPlaylists = settings["settings.remove.podcast.playlists"];
+    }
+    if (removeRichSections == null) {
+        removeRichSections = settings["settings.remove.rich.sections"];
     }
 
     buildUI();

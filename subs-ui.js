@@ -275,9 +275,19 @@ function processSections() {
 function removeWatchedAndAddButton() {
     log("Removing watched from feed and adding overlay");
 
-    let richSections = document.querySelectorAll(".ytd-rich-section-renderer");
     if (removeRichSections) {
+        let richSections = document.querySelectorAll(".ytd-rich-section-renderer");
         richSections.forEach(elem => elem.remove());
+    }
+
+    if (removePodcastPlaylists) {
+        let podcastPlaylists = document.querySelectorAll("#content > yt-lockup-view-model > div > div > yt-lockup-metadata-view-model > div.yt-lockup-metadata-view-model__text-container > div > yt-content-metadata-view-model > div:nth-child(3) > span > span > a");
+        podcastPlaylists.forEach(playlist => {
+            const richItem = playlist.closest("ytd-rich-item-renderer");
+            if (richItem) {
+                richItem.remove()
+            }
+        });
     }
 
     let els = document.querySelectorAll(vidQuery());
