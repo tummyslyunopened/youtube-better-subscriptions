@@ -5,6 +5,7 @@ let hidePremieres = null;
 let hideShorts = null;
 let hideMembersOnly = null;
 let intervalId = null;
+let removeRichSections = null;
 let hideOlder = null;
 let hideOlderCutoff = null;
 
@@ -107,6 +108,9 @@ async function initSubs() {
     }
     if (hideShorts == null) {
         hideShorts = settings["settings.hide.shorts"];
+    }
+    if (removeRichSections == null) {
+        removeRichSections = settings["settings.remove.rich.sections"];
     }
     if (hideMembersOnly == null) {
         hideMembersOnly = settings["settings.hide.members"];
