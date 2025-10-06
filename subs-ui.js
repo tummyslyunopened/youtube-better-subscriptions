@@ -290,7 +290,8 @@ function removeWatchedAndAddButton() {
         } else if (
             (hideWatched && vid.isStored) ||
             (hidePremieres && vid.isPremiere) ||
-            (hideShorts && vid.isShort)
+            (hideShorts && vid.isShort) ||
+            (hideMembersOnly && vid.membersOnly)
         ) {
             vid.hide();
             hiddenCount++;

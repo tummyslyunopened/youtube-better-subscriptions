@@ -36,6 +36,16 @@ function getVideoDuration(item) {
     }
 }
 
+function isMemberOnly(badges) {
+    let membersOnly = false;
+    Array.from(badges).forEach(element => {
+        if (element.innerText.includes("Members only")) {
+            membersOnly = true;
+        }
+    });
+    return membersOnly;
+}
+
 function getVideoFuzzyDate(item) {
     let videoFuzzyDate = item.querySelectorAll(".yt-content-metadata-view-model__metadata-text")[2].innerText
     if (videoFuzzyDate != null) {
@@ -66,6 +76,8 @@ class Video {
         this.buttonId = this.isStored ? MARK_UNWATCHED_BTN : MARK_WATCHED_BTN;
         this.fuzzyDate = containingDiv.querySelectorAll(".yt-content-metadata-view-model__metadata-text")[2].innerText
         this.videoDuration = getVideoDuration(this);
+        this.badges = containingDiv.querySelectorAll("ytd-badge-supported-renderer");
+        this.membersOnly = isMemberOnly(this.badges);
 
         log("Checking video " + this.videoId + " for premiere: duration = " + this.videoDuration);
         if (this.videoDuration == null) {
